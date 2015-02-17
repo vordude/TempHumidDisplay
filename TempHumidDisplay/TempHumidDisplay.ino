@@ -32,8 +32,14 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I
 #define powerPin1 8
 #define lowPin1 9
 
+#define dataPin2  6
+#define clockPin2 7
+#define powerPin2 4
+#define lowPin2 5
 
-SHT1x sht1x(dataPin, clockPin);
+
+SHT1x sht1x_one(dataPin1, clockPin1);
+SHT1x sht1x_two(dataPin2, clockPin2);
 
 
 void setup()   /*----( SETUP: RUNS ONCE )----*/
@@ -43,33 +49,49 @@ void setup()   /*----( SETUP: RUNS ONCE )----*/
    pinMode(8, OUTPUT);
    pinMode(9, OUTPUT);
    digitalWrite(9, LOW);
+   
+   pinMode(4, OUTPUT);
+   pinMode(5, OUTPUT);
+   
+   pinMode(13, OUTPUT);
+   digitalWrite(5, LOW);
 }
 
 
 void loop()   /*----( LOOP: RUNS CONSTANTLY )----*/
 {
   
-    float temp_f;
-    float humidity;
+    float temp_f_1;
+    float humidity_1;
     digitalWrite(8, HIGH);
-
     delay(500);
+    temp_f_1 = sht1x_one.readTemperatureF();
+    humidity_1 = sht1x_one.readHumidity();
+    digitalWrite(8, LOW);
 
-    temp_f = sht1x.readTemperatureF();
-    humidity = sht1x.readHumidity();
 
+    float temp_f_2;
+    float humidity_2;
+    digitalWrite(4, HIGH);
+    delay(500);
+    temp_f_2 = sht1x_one.readTemperatureF();
+    humidity_2 = sht1x_one.readHumidity();
+    digitalWrite(4, LOW);
 
-  lcd.setCursor(0,0); //Start at character 4 on line 0
-  lcd.print ("Temp: ");
-  lcd.print(temp_f);
-  lcd.print ("F");
-  lcd.setCursor(0,1); //Start at character 4 on line 0
-  lcd.print ("Hum:  ");
-  lcd.print(humidity);
+  digitalWrite(13, HIGH);
+  lcd.setCursor(0,0); //Start at character 0 on line 0
+  lcd.print(temp_f_1);
+  lcd.print ("F - ");
+  lcd.print(humidity_1);
   lcd.print ("%");
 
-
-  digitalWrite(8, LOW);
-  delay(300000);
+  lcd.setCursor(0,1); //Start at character 0 on line 1
+  lcd.print(temp_f_2);
+  lcd.print ("F - ");
+  lcd.print(humidity_2);
+  lcd.print ("%");
+  digitalWrite(13, LOW);
+  
+  delay(60000);
 }/* --(end main loop )-- */
 
