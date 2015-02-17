@@ -83,7 +83,6 @@ void loop()   /*----( LOOP: RUNS CONSTANTLY )----*/
   lcd.print ("F - ");
   lcd.print(humidity_2);
   lcd.print ("%");
-  digitalWrite(13, LOW);
   // Wait a minute, then do it again.
   delay(60000);
 }
